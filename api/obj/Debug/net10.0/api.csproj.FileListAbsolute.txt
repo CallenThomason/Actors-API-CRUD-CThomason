@@ -145,3 +145,4 @@ C:\Users\calle\OneDrive\Desktop\LevelTwo\levelTwoLecture\d1-API\api\obj\Debug\ne
 C:\Users\calle\OneDrive\Desktop\LevelTwo\levelTwoLecture\d1-API\api\obj\Debug\net10.0\api.pdb
 C:\Users\calle\OneDrive\Desktop\LevelTwo\levelTwoLecture\d1-API\api\obj\Debug\net10.0\api.genruntimeconfig.cache
 C:\Users\calle\OneDrive\Desktop\LevelTwo\levelTwoLecture\d1-API\api\obj\Debug\net10.0\ref\api.dll
+C:\Users\calle\OneDrive\Desktop\LevelTwo\levelTwoLecture\d1-API\api\obj\Debug\net10.0\api.sourcelink.json

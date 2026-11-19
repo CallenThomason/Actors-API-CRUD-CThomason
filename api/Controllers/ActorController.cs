@@ -36,27 +36,35 @@ namespace api.Controllers
         [HttpPost("create")]
         public ActionResult<ActorResponseDto> Create([FromBody] CreateActorDto dto)
         {
-            ActorResponseDto actor = _services.Create(dto);
+            
             if (_services.Exists(dto))
             {
                 return Conflict($"An Actor with the name {dto.Name} alrweady exists.");
             }
+            else{
+                ActorResponseDto actor = _services.Create(dto);
              return CreatedAtAction(nameof(GetById), new {id = actor.Id}, actor ); 
+             }
         }
 
         [HttpPut("update/{id}")]
         public ActionResult<ActorResponseDto> Update(int id, [FromBody] UpdateActorDto dto)
         {
-            ActorResponseDto? actor = _services.Update(id, dto);
-            if(actor is null)
-            {
-                return NotFound($"Actor with id {id} could not be found");
-            }
-            if (_services.UpdateExists(dto))
+           
+            bool exiting = _services.UpdateExists(dto); 
+           
+             if (exiting)
             {
                 return Conflict($"An Actor with the name {dto.Name} alrweady exists.");
             }
+            else{
+                 ActorResponseDto? actor = _services.Update(id, dto);
+                  if(actor is null)
+            {
+                return NotFound($"Actor with id {id} could not be found");
+            }
             return Ok(actor); 
+            }
         }
 
         [HttpDelete("Delete/{id}")]
