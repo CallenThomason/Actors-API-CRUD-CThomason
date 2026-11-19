@@ -19,19 +19,24 @@ namespace api.Controllers
             _services = services; 
         }
 
+        //async Task<...>: The action awaits the service, so it returns a Task
+        //ASP.NET Core awaits the Task for us, then sends the response. 
+
         [HttpGet]
-        public ActionResult<List<MovieResponseDto>> GetAll()
+        public async Task<ActionResult<List<MovieResponseDto>>> GetAll()
         {
-            return Ok(_services.GetAll());
+            //await frees this thread while the database works
+            //Allows the server to handle other requests
+            return Ok(await _services.GetAllAsync());
         }
 
         [HttpGet("getById/{id}")]
 
         //Get api/movie/getbyid/5
         //return 200 with the movie, or 400 if no movie is in the db that matches
-        public ActionResult<MovieResponseDto> GetById(int id)
+        public async Task<ActionResult<MovieResponseDto>> GetById(int id)
         {
-            MovieResponseDto? movie = _services.GetById(id); 
+            MovieResponseDto? movie = await _services.GetByIdAsync(id); 
             if(movie is null)
             {
                 return NotFound($"No Movie with {id} exists"); //sends a 404 response
@@ -42,9 +47,9 @@ namespace api.Controllers
         //JSON body becomes our CreateMovieDto
         //return 201 created with the new movie, plus our location headers
         [HttpPost("AddMovie")]
-        public ActionResult<MovieResponseDto> AddMovie([FromBody] CreateMovieDto dto)
+        public async Task<ActionResult<MovieResponseDto>> AddMovie([FromBody] CreateMovieDto dto)
         {
-            MovieResponseDto movie = _services.Create(dto);
+            MovieResponseDto movie = await _services.CreateAsync(dto);
 
 
             //Created at action sends a 201, It uses getbyid action and the new Id
@@ -52,9 +57,9 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetById), new {id = movie.Id}, movie ); 
         }
         [HttpPut("update/{id}")]
-        public ActionResult<MovieResponseDto> Update(int id, [FromBody] UpdateMovieDto dto)
+        public async Task<ActionResult<MovieResponseDto>> Update(int id, [FromBody] UpdateMovieDto dto)
         {
-            MovieResponseDto? movie = _services.Update(id, dto); 
+            MovieResponseDto? movie = await _services.UpdateAsync(id, dto); 
             if(movie is null)
             {
                 return NotFound(); 
@@ -63,9 +68,9 @@ namespace api.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-           bool isDeleted = _services.Delete(id);
+           bool isDeleted = await _services.DeleteAsync(id);
             if (!isDeleted)
             {
                 return NotFound(); 

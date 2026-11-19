@@ -18,15 +18,15 @@ namespace api.Controllers
             _services = services; 
         }
         [HttpGet]
-        public ActionResult<List<ActorResponseDto>> GetAll()
+        public async Task<ActionResult<List<ActorResponseDto>>> GetAll()
         {
-            return Ok(_services.GetAll()); 
+            return Ok( await _services.GetAllAsync()); 
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ActorResponseDto> GetById(int id)
+        public async Task<ActionResult<ActorResponseDto>> GetById(int id)
         {
-            ActorResponseDto? found = _services.GetById(id); 
+            ActorResponseDto? found = await _services.GetByIdAsync(id); 
             if(found is null)
             {
                 return NotFound($"Actor with the id {id} was not found"); 
@@ -34,31 +34,31 @@ namespace api.Controllers
             return Ok(found); 
         }
         [HttpPost("create")]
-        public ActionResult<ActorResponseDto> Create([FromBody] CreateActorDto dto)
+        public async Task<ActionResult<ActorResponseDto>> Create([FromBody] CreateActorDto dto)
         {
             
-            if (_services.Exists(dto))
+            if (await _services.ExistsAsync(dto))
             {
                 return Conflict($"An Actor with the name {dto.Name} alrweady exists.");
             }
             else{
-                ActorResponseDto actor = _services.Create(dto);
+                ActorResponseDto actor = await _services.CreateAsync(dto);
              return CreatedAtAction(nameof(GetById), new {id = actor.Id}, actor ); 
              }
         }
 
         [HttpPut("update/{id}")]
-        public ActionResult<ActorResponseDto> Update(int id, [FromBody] UpdateActorDto dto)
+        public async Task<ActionResult<ActorResponseDto>> Update(int id, [FromBody] UpdateActorDto dto)
         {
            
-            bool exiting = _services.UpdateExists(dto); 
+            bool exiting = await _services.UpdateExistsAsync(dto); 
            
              if (exiting)
             {
                 return Conflict($"An Actor with the name {dto.Name} alrweady exists.");
             }
             else{
-                 ActorResponseDto? actor = _services.Update(id, dto);
+                 ActorResponseDto? actor = await _services.UpdateAsync(id, dto);
                   if(actor is null)
             {
                 return NotFound($"Actor with id {id} could not be found");
@@ -68,9 +68,9 @@ namespace api.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public ActionResult<ActorResponseDto> Delete(int id)
+        public async Task<ActionResult<ActorResponseDto>> Delete(int id)
         {
-              bool deleted = _services.Delete(id);
+              bool deleted = await _services.DeleteAsync(id);
             if(!deleted)
             {
                 return NotFound($"Actor with id {id} could not be found");

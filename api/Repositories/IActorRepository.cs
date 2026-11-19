@@ -6,10 +6,10 @@ namespace api.Repositories
 {
     public interface IActorRepository
     {
-        List<Actor> GetAll(); 
-        Actor? GetById(int id);
-        Actor Create(Actor actor);
-        void Update(Actor actor); 
-        void Delete(Actor actor); 
+        Task<List<Actor>> GetAllAsync(); 
+        Task<Actor?> GetByIdAsync(int id);
+        Task<Actor> CreateAsync(Actor actor);
+        Task UpdateAsync(Actor actor); 
+        Task DeleteAsync(Actor actor); 
     }
 }

@@ -9,14 +9,16 @@ namespace api.Services
 {
     public interface IMovieServices
     {
-        List<MovieResponseDto> GetAll();
-        MovieResponseDto? GetById(int id); 
-        MovieResponseDto Create(CreateMovieDto dto);
+        //Every method returns a Task, so the caller can await it
+        //Task<bool> means a bool will be ready later
+        Task<List<MovieResponseDto>> GetAllAsync();
+        Task<MovieResponseDto?> GetByIdAsync(int id); 
+        Task<MovieResponseDto> CreateAsync(CreateMovieDto dto);
 
         //This will return null if the movie does not exist
-        MovieResponseDto? Update(int id, UpdateMovieDto dto); 
+        Task<MovieResponseDto?> UpdateAsync(int id, UpdateMovieDto dto); 
 
         //returns true if the movie is deleted
-        bool Delete(int id);  
+        Task<bool> DeleteAsync(int id);  
     }
 }

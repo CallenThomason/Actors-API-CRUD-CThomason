@@ -7,14 +7,14 @@ namespace api.Services
 {
     public interface IActorServices
     {
-         List<ActorResponseDto> GetAll(); 
-        ActorResponseDto? GetById(int id);
-        ActorResponseDto Create(CreateActorDto dto); 
-        ActorResponseDto Update(int id, UpdateActorDto dto); 
+         Task<List<ActorResponseDto>> GetAllAsync(); 
+        Task<ActorResponseDto?> GetByIdAsync(int id);
+       Task<ActorResponseDto> CreateAsync(CreateActorDto dto); 
+       Task<ActorResponseDto> UpdateAsync(int id, UpdateActorDto dto); 
 
-        bool Delete(int id); 
-        bool Exists(CreateActorDto dto); 
-        bool UpdateExists(UpdateActorDto dto); 
+       Task<bool> DeleteAsync(int id); 
+       Task<bool> ExistsAsync(CreateActorDto dto); 
+       Task<bool> UpdateExistsAsync(UpdateActorDto dto); 
 
     }
 }

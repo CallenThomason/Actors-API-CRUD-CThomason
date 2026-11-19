@@ -4,6 +4,7 @@ using api.Dtos;
 using api.Migrations;
 using api.Models;
 using api.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
 {
@@ -15,37 +16,37 @@ namespace api.Services
         {
             _repo = repo; 
         }
-        public ActorResponseDto Create(CreateActorDto dto)
+        public async Task<ActorResponseDto> CreateAsync(CreateActorDto dto)
         {
            Actor actor = new Actor(); 
            actor.Name = dto.Name; 
            actor.Country = dto.Country; 
            actor.BirthYear = dto.BirthYear; 
 
-           Actor saved = _repo.Create(actor); 
+           Actor saved = await _repo.CreateAsync(actor); 
            return ToDto(saved); 
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            Actor? actor = _repo.GetById(id); 
+            Actor? actor = await _repo.GetByIdAsync(id); 
             if(actor is null)
             {
                 return false; 
             }
-            _repo.Delete(actor); 
+           await _repo.DeleteAsync(actor); 
             return true; 
         }
 
-        public List<ActorResponseDto> GetAll()
+        public async Task<List<ActorResponseDto>> GetAllAsync()
         {
-            List<Actor> actor = _repo.GetAll(); 
+            List<Actor> actor = await _repo.GetAllAsync(); 
              return actor.Select(ToDto).ToList();
         }
 
-        public ActorResponseDto? GetById(int id)
+        public async Task<ActorResponseDto?> GetByIdAsync(int id)
         {
-            Actor? actor = _repo.GetById(id); 
+            Actor? actor = await _repo.GetByIdAsync(id); 
             if(actor is null)
             {
                 return null; 
@@ -53,9 +54,9 @@ namespace api.Services
             return ToDto(actor); 
         }
 
-        public ActorResponseDto Update(int id, UpdateActorDto dto)
+        public async Task<ActorResponseDto> UpdateAsync(int id, UpdateActorDto dto)
         {
-           Actor? actor = _repo.GetById(id); 
+           Actor? actor = await _repo.GetByIdAsync(id); 
             if(actor is null)
             {
                 return null; 
@@ -64,7 +65,7 @@ namespace api.Services
           actor.Country = dto.Country; 
           actor.BirthYear = dto.BirthYear; 
 
-          _repo.Update(actor); 
+          await _repo.UpdateAsync(actor); 
           return ToDto(actor); 
         }
 
@@ -79,18 +80,22 @@ namespace api.Services
             return dto; 
         }
 
-        public bool Exists(CreateActorDto dto)
+        public async Task<bool> ExistsAsync(CreateActorDto dto)
         {
-            bool exists = _repo.GetAll().Any(w => w.Name.ToLower() == dto.Name.ToLower());
+             List<Actor> actor = await _repo.GetAllAsync(); 
+             bool exists = actor .Any(w => w.Name.ToLower() == dto.Name.ToLower());
             if (exists)
             {
                 return true; 
             }
             return false; 
         }
-         public bool UpdateExists(UpdateActorDto dto)
+         public async Task<bool> UpdateExistsAsync(UpdateActorDto dto)
         {
-            bool exists = _repo.GetAll().Any(w => w.Name.ToLower() == dto.Name.ToLower());
+             List<Actor> actor = await _repo.GetAllAsync(); 
+            bool exists = actor.Any(w => w.Name.ToLower() == dto.Name.ToLower());
+            
+            
             if (exists)
             {
                 return true; 
